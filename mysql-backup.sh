@@ -7,6 +7,6 @@ mysqldump -u$DB_USER -p$DB_PASSWORD --lock-tables=false --no-tablespaces -h $DB_
 echo "MySQL database dumped successfully"
 echo "Removing backups older than 6 hours"
 
-find /var/backup -name "backup-*.sql" -mmin +360 -exec rm {} \;
+find /var/backup -name "backup-*.sql" -type f -mmin +360 -exec rm {} \;
 
 echo "Removed backups older than 6 hours"
