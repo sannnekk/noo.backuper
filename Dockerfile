@@ -1,10 +1,10 @@
-# Use a lightweight base image like Debian or Ubuntu
-FROM debian:bullseye-slim
+# Use Ubuntu as the base image
+FROM ubuntu:20.04
 
-# Set environment variables to avoid interactive prompts
+# Set environment variables to avoid interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install necessary tools for downloading and installing MySQL APT repo
+# Install required tools for downloading and installing MySQL APT repo
 RUN apt-get update && \
     apt-get install -y wget lsb-release gnupg
 
@@ -13,7 +13,7 @@ RUN wget https://dev.mysql.com/get/mysql-apt-config_0.8.26-1_all.deb && \
     dpkg -i mysql-apt-config_0.8.26-1_all.deb && \
     rm -f mysql-apt-config_0.8.26-1_all.deb
 
-# Update the package list and install MySQL client (including mysqldump)
+# Update package list after adding MySQL APT repo and install MySQL client (including mysqldump)
 RUN apt-get update && \
     apt-get install -y mysql-client && \
     apt-get clean
