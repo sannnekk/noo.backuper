@@ -1,23 +1,19 @@
-# Use Ubuntu as the base image
+# Use an Ubuntu base image
 FROM ubuntu:20.04
 
-# Set environment variables to avoid interactive prompts during package installation
+# Set non-interactive mode for installations
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install required tools for downloading and installing MySQL APT repo
-RUN apt-get update && \
-    apt-get install -y wget lsb-release gnupg
-
-# Add MySQL APT repository to the container
-RUN wget https://dev.mysql.com/get/mysql-apt-config_0.8.26-1_all.deb && \
-    dpkg -i mysql-apt-config_0.8.26-1_all.deb && \
-    rm -f mysql-apt-config_0.8.26-1_all.deb
-
-# Update package list after adding MySQL APT repo and install MySQL client (including mysqldump)
+# Update the package list and install MySQL client (which includes mysqldump)
 RUN apt-get update && \
     apt-get install -y mysql-client && \
-    apt-get clean
+    rm -rf /var/lib/apt/lists/*
 
-RUN mkdir /var/backup
+# Set the working directory
+WORKDIR /usr/src/script
 
-COPY . .
+# Copy your script to the container
+COPY mysql-backup.sh /usr/src/script/
+
+# Ensure the script has the correct permissions
+RUN chmod +x /usr/src/script/mysql-backup.sh
